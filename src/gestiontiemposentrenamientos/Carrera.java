@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2019 Pablo Ugalde Trejos
+ * UNIVERSIDAD ESTATAL A DISTANCIA
+ * 00824 Programacion Intermedia
  */
 package gestiontiemposentrenamientos;
 

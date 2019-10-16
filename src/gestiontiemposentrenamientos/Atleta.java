@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2019 Pablo Ugalde Trejos
+ * UNIVERSIDAD ESTATAL A DISTANCIA
+ * 00824 Programacion Intermedia
  */
 package gestiontiemposentrenamientos;
 
@@ -9,16 +9,18 @@ package gestiontiemposentrenamientos;
  *
  * @author Pablo Ugalde Trejos
  */
-public class Atleta {
-    public Atleta() {}
+public class Atleta extends Persona{
+    Nivel nivel;
     private int idatleta; //variable para numero de atleta
     //variable para el nivel de atleta    
     //Nivel (1.Principiante - 2.Intermedio - 3.Avanzado - 4.Elite)
-    private int nivel; 
+    private enum Nivel{Principiante, Intermedio, Avanzado, Elite}; 
 
     public int getIdatleta() {return idatleta;}
     public void setIdatleta(int idatleta) {this.idatleta = idatleta;}
-    public int getNivel() {return nivel;}
-    public void setNivel(int nivel) {this.nivel = nivel;}
+    public Nivel getNivel() {return nivel;}
+    public void setNivel(Nivel nivel) {this.nivel = nivel;}
     
+    public Atleta() {    
+    }
 }
