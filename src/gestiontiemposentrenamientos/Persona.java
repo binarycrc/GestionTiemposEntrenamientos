@@ -15,8 +15,15 @@ import java.util.Date;
  * @author Pablo Ugalde Trejos
  */
 public class Persona {
-    public Persona() {
-    }
+    public Persona() {}
+    public Persona(int identificacion,String nombre,String apellido,char sexo,int edad,Date fechanacimiento) {
+        this.identificacion = identificacion;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.sexo = sexo;
+        this.edad = edad;
+        this.fechanacimiento = fechanacimiento;
+    }    
     /*********************************/
     /* Atributos de la clase Persona */
     /*********************************/

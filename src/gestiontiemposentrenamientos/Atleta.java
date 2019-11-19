@@ -5,15 +5,24 @@
  */
 package gestiontiemposentrenamientos;
 
+import java.util.Date;
+
 /**
  *
  * @author Pablo Ugalde Trejos
  */
 public class Atleta extends Persona{
+    
     Nivel nivel;
     private int idatleta; //variable para numero de atleta
     //variable para el nivel de atleta    
-    //Nivel (1.Principiante - 2.Intermedio - 3.Avanzado - 4.Elite)
+ 
+    public Atleta(int identificacion,String nombre,String apellido,char sexo
+            ,int edad,Date fechanacimiento) {
+        super(identificacion, nombre, apellido, sexo, edad, fechanacimiento);
+    }
+
+//Nivel (1.Principiante - 2.Intermedio - 3.Avanzado - 4.Elite)
     private enum Nivel{Principiante, Intermedio, Avanzado, Elite}; 
 
     public int getIdatleta() {return idatleta;}

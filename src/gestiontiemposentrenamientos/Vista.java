@@ -14,10 +14,6 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 
-/**
- *
- * @author Pablo Ugalde Trejos
- */
 public class Vista extends javax.swing.JFrame {
     boolean valido = false; //variable para validar el formulario de persona
     int cantidadIntentos =0; //variable para la cantidad de intentos

@@ -12,12 +12,21 @@ import java.util.Date;
  * @author Pablo Ugalde Trejos
  */
 public class Carrera {
-    public Carrera() {}
     private int idatleta; //variable para numero de atleta
     private Date fechapractica; //variable para la fecha de practica
     private int vuelta; //variable para numero de vuelta
     private int tiempominutos; //variable para tiempo obtenido en minutos
     private int tiemposegundos; //variable para tiempo obtenido en segundos
+
+    public Carrera() {}
+    public Carrera(int idatleta,Date fechapractica,int vuelta,int tiempominutos
+            ,int tiemposegundos) {
+        this.idatleta=idatleta;
+        this.fechapractica=fechapractica;
+        this.vuelta=vuelta;
+        this.tiempominutos=tiempominutos;
+        this.tiemposegundos=tiemposegundos;
+    }
 
     public int getIdatleta() {return idatleta;}
     public void setIdatleta(int idatleta) {this.idatleta = idatleta;}
