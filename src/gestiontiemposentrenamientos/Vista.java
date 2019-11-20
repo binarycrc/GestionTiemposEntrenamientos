@@ -24,7 +24,7 @@ public class Vista extends javax.swing.JFrame {
     Border borderValido = BorderFactory.createLineBorder(Color.BLUE);
     //arreglo principal para el objeto atleta
     public static ArrayList <Atleta> ListaAtletas = new ArrayList <Atleta>();
-    private ArchivoAtletas archivos = new ArchivoAtletas();
+    private FileAtletas archivos = new FileAtletas();
     /**
      * Creates new form Vista
      */
@@ -40,9 +40,28 @@ public class Vista extends javax.swing.JFrame {
         cal.add(Calendar.YEAR, -20);
         dpFechaNacimiento.setDate(cal.getTime());
         archivos.crear_archivo();//creamos el archivo
-
+        cargarRegistros();
     }
-//metodo para marcar los campos como requeridos
+    
+    private void cargarRegistros(){
+        //crear el modelo de la tabla de datos para la clase persona
+        DefaultTableModel modeloPersona=(DefaultTableModel) jTablePersona.getModel();
+
+        for (Atleta atleta : ListaAtletas) {
+            //se agrega la linea con los datos a la tabla
+            modeloPersona.addRow(new Object[]{
+                atleta.getIdentificacion(),
+                atleta.getNombre(),
+                atleta.getApellido(),
+                atleta.getSexo(),
+                atleta.getFechanacimientoStrFormat(),
+                atleta.getEdad(),
+                atleta.getNivel()
+            });
+        }
+    }
+    
+    //metodo para marcar los campos como requeridos
     //cambia el color del borde si estan vacios
     private void formPersonaValidar(){
         if(txtIdentificacion.getText().trim().isEmpty())
@@ -91,7 +110,10 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablePersona = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableAtleta = new javax.swing.JTable();
         btnSalir = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -250,23 +272,63 @@ public class Vista extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Personas", jPanel2);
 
+        jTableAtleta.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Identificacion", "Nombre", "Apellido", "Nivel"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableAtleta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableAtletaMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTableAtleta);
+        jTableAtleta.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 579, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(206, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(158, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Carreras", jPanel4);
 
+        btnSalir.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(0, 153, 153));
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
             }
         });
 
@@ -275,35 +337,35 @@ public class Vista extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(227, 227, 227)
-                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(241, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 75, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSalir)
-                .addGap(0, 19, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSalir)
+                    .addComponent(btnGuardar))
+                .addGap(0, 24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 43, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -355,6 +417,7 @@ public class Vista extends javax.swing.JFrame {
         atleta.setFechanacimiento(dpFechaNacimiento.getDate());
         //calculamos la edad con respecto a la fecha de nacimiento
         atleta.setEdadDiff(dpFechaNacimiento.getDate());
+        atleta.setNivel(Atleta.Nivel.Principiante);
 
         //crear el modelo de la tabla de datos para la clase persona
         DefaultTableModel modeloPersona=(DefaultTableModel) jTablePersona.getModel();
@@ -388,6 +451,21 @@ public class Vista extends javax.swing.JFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            archivos.abrir_archivoEscritura();
+            archivos.escribirRecords();
+            archivos.cerrarArchivoEscritura();
+        } catch (Exception e) {
+            System.err.println("Error al escribir el archivo.\n"+e.toString());
+        }
+       
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void jTableAtletaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableAtletaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableAtletaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -426,6 +504,7 @@ public class Vista extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnSalir;
     private org.jdesktop.swingx.JXDatePicker dpFechaNacimiento;
     private javax.swing.JLabel jLabel10;
@@ -438,7 +517,9 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTableAtleta;
     private javax.swing.JTable jTablePersona;
     private javax.swing.JRadioButton rbFemenino;
     private javax.swing.JRadioButton rbMasculino;

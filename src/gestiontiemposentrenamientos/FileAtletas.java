@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  *
  * @author Pablo Ugalde Trejos
  */
-public class ArchivoAtletas {
+public class FileAtletas {
 
     private static String archivo = "ControlEntrenamiento.dat";
     private final File file = new File(archivo);//// crea un objeto File con base en el valor de la variable archivo
@@ -34,8 +34,7 @@ public class ArchivoAtletas {
     public void crear_archivo() {
         try {
             if (file.exists()) {// si existe el nombre, muestra información sobre él
-                //JOptionPane.showMessageDialog(null, "El archivo " + file.getName() + " no existe" + "\n\n" + file.getAbsolutePath());
-                ArchivoAtletas archivos = new ArchivoAtletas();//Crear el objeto de la clase Archivo Records
+                FileAtletas archivos = new FileAtletas();//Crear el objeto de la clase Archivo Records
                 archivos.abrir_archivoLectura();
                 archivos.LeerRecords();//leer la lista
                 archivos.cerrarArchivoLectura();
@@ -44,7 +43,6 @@ public class ArchivoAtletas {
                 PrintWriter writer = new PrintWriter(archivo, "UTF-8");
                 writer.close();
             }
-
         } catch (SecurityException securityException) {
             System.err.println("No tiene acceso de escritura a este archivo.\n"+securityException.toString());
             System.exit(1);
@@ -53,8 +51,8 @@ public class ArchivoAtletas {
             System.err.println("Error al crear el archivo.\n"+filesNotFoundException.toString());
             System.exit(1);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ArchivoAtletas.class.getName()).log(Level.SEVERE, null, ex);
-        } // fin de catch
+            Logger.getLogger(FileAtletas.class.getName()).log(Level.SEVERE, null, ex);
+        } // fin de catch // fin de catch
 
     }
 
@@ -103,18 +101,24 @@ public class ArchivoAtletas {
             System.err.println("Error al leer del archivo.\n"+stateException.toString());
             System.exit(1);
         } catch (ParseException ex) {
-            Logger.getLogger(ArchivoAtletas.class.getName()).log(Level.SEVERE, null, ex);
-        } // fin de catch
+            Logger.getLogger(FileAtletas.class.getName()).log(Level.SEVERE, null, ex);
+        } // fin de catch // fin de catch
     }
 
     public void escribirRecords() {
         try {
             for (Atleta elemento : Vista.ListaAtletas) {
-                //escritura.format("%s %s %d \n", elemento.getNombre(), elemento.getPais(),+elemento.getPuntaje());//System.lineSeparator() separador en txt
-                escritura.format(" %d %s %s %s %d %s %d %s " + System.lineSeparator(), elemento.getIdentificacion(), elemento.getNombre(), elemento.getApellido(),
-                        elemento.getSexo(), elemento.getEdad(), elemento.getFechanacimiento(), elemento.getIdatleta(), elemento.getNivel());//System.lineSeparator() separador en txt
+                escritura.format(" %d %s %s %s %d %s %d %s " + System.lineSeparator()
+                        , elemento.getIdentificacion()
+                        , elemento.getNombre()
+                        , elemento.getApellido()
+                        , elemento.getSexo()
+                        , elemento.getEdad()
+                        , elemento.getFechanacimientoStrFormat()
+                        , elemento.getIdatleta()
+                        , elemento.getNivel()
+                );
             }
-
         } catch (FormatterClosedException formatterClosedException) {//Se produce una excepción no verificada cuando el formateador se ha cerrado.
             System.err.println("Error al escribir en el archivo.\n"+formatterClosedException.toString());
         } // fin de catch 
@@ -142,5 +146,4 @@ public class ArchivoAtletas {
             System.err.println("Error: " + e);
         }
     }
-
 }
