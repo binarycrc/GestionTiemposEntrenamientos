@@ -6,6 +6,7 @@
 package gestiontiemposentrenamientos;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.BorderFactory;
@@ -21,8 +22,9 @@ public class Vista extends javax.swing.JFrame {
     Border borderInvalido = BorderFactory.createLineBorder(Color.red);
     //variable para el color rojo de la prueba valida
     Border borderValido = BorderFactory.createLineBorder(Color.BLUE);
-    //arreglo principal para el objeto persona
-
+    //arreglo principal para el objeto atleta
+    public static ArrayList <Atleta> ListaAtletas = new ArrayList <Atleta>();
+    private ArchivoAtletas archivos = new ArchivoAtletas();
     /**
      * Creates new form Vista
      */
@@ -37,6 +39,7 @@ public class Vista extends javax.swing.JFrame {
         cal.setTime(cdate);
         cal.add(Calendar.YEAR, -20);
         dpFechaNacimiento.setDate(cal.getTime());
+        archivos.crear_archivo();//creamos el archivo
 
     }
 //metodo para marcar los campos como requeridos
@@ -205,11 +208,11 @@ public class Vista extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Identificacion", "Nombre", "Apellido", "Sexo", "Fec Nac", "Edad"
+                "Identificacion", "Nombre", "Apellido", "Sexo", "Fec Nac", "Edad", "Nivel"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -223,6 +226,7 @@ public class Vista extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTablePersona);
+        jTablePersona.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -231,12 +235,9 @@ public class Vista extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(254, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +254,7 @@ public class Vista extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 550, Short.MAX_VALUE)
+            .addGap(0, 579, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,12 +275,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 104, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(227, 227, 227)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(241, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,10 +311,15 @@ public class Vista extends javax.swing.JFrame {
 
     private void txtIdentificacionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdentificacionKeyReleased
         try {
+            String valIdentificacion = "";
             txtIdentificacion.setBorder(borderValido);
-            //si el valor ingresado no es integer es una excepcion
-            int i = Integer.parseInt(txtIdentificacion.getText());
-            formPersonaValidar();
+            //filtramos cada caracter hasta que todos sean numeros
+            for (int i=0; i<txtIdentificacion.getText().length(); i++) {
+                if (Character.isDigit(txtIdentificacion.getText().charAt(i))) {
+                    valIdentificacion+=txtIdentificacion.getText().charAt(i);
+                }
+            }
+            txtIdentificacion.setText(valIdentificacion);
         } catch (NumberFormatException e) {
             txtIdentificacion.setBorder(borderInvalido);
             valido = false;
@@ -341,37 +347,30 @@ public class Vista extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         //creamos un objeto nuevo de la clase persona
         //agregamos los datos ingresados y validados por el usuario
-        Persona persona=new Persona();
-        persona.setIdentificacion(Integer.parseInt(txtIdentificacion.getText()));
-        persona.setNombre(txtNombre.getText());
-        persona.setApellido(txtApellido.getText());
-        if (rbFemenino.isSelected()){persona.setSexo('F');}else{persona.setSexo('M');}
-        persona.setFechanacimiento(dpFechaNacimiento.getDate());
+        Atleta atleta=new Atleta();
+        atleta.setIdentificacion(Integer.parseInt(txtIdentificacion.getText()));
+        atleta.setNombre(txtNombre.getText());
+        atleta.setApellido(txtApellido.getText());
+        if (rbFemenino.isSelected()){atleta.setSexo('F');}else{atleta.setSexo('M');}
+        atleta.setFechanacimiento(dpFechaNacimiento.getDate());
         //calculamos la edad con respecto a la fecha de nacimiento
-        persona.setEdadDiff(dpFechaNacimiento.getDate());
+        atleta.setEdadDiff(dpFechaNacimiento.getDate());
 
         //crear el modelo de la tabla de datos para la clase persona
         DefaultTableModel modeloPersona=(DefaultTableModel) jTablePersona.getModel();
         //se agrega la linea con los datos a la tabla
         modeloPersona.addRow(new Object[]{
-            persona.getIdentificacion(),
-            persona.getNombre(),
-            persona.getApellido(),
-            persona.getSexo(),
-            persona.getFechanacimientoStrFormat(),
-            persona.getEdad()
+            atleta.getIdentificacion(),
+            atleta.getNombre(),
+            atleta.getApellido(),
+            atleta.getSexo(),
+            atleta.getFechanacimientoStrFormat(),
+            atleta.getEdad(),
+            atleta.getNivel()
         });
 
-        //crear un objeto atleta de la clase atleta
-        //con los parametros del rango de numeros aleatorios para
-        //la tarjeta de seguridad
-        Atleta atleta=new Atleta();
-        //asignamos la identificacion al numero de atleta
         atleta.setIdatleta(Integer.parseInt(txtIdentificacion.getText()));
-        //agregamos el atleta a persona
-        persona.setAtleta(atleta);
-        persona.guardar();
-
+        ListaAtletas.add(atleta);
         //limpiamos los campos
         txtIdentificacion.setText("");
         txtIdentificacion.requestFocus();
@@ -429,19 +428,13 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnSalir;
     private org.jdesktop.swingx.JXDatePicker dpFechaNacimiento;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
